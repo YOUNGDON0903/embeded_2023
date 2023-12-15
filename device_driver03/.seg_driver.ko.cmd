@@ -1,1 +1,0 @@
-cmd_/home/kim/working/device_driver03/seg_driver.ko := aarch64-linux-gnu-ld -r  -EL  -maarch64elf -z noexecstack   --build-id=sha1  -T scripts/module.lds -o /home/kim/working/device_driver03/seg_driver.ko /home/kim/working/device_driver03/seg_driver.o /home/kim/working/device_driver03/seg_driver.mod.o;  true
