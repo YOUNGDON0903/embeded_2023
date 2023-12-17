@@ -3,7 +3,10 @@
 #include <linux/fs.h>
 #include <linux/cdev.h>
 #include <linux/uaccess.h>
-#include <linux/gpio.h>
+//#include <linux/gpio.h>
+#include <linux/pwm.h>
+
+
 
 /* Meta Information */
 MODULE_LICENSE("GPL");
@@ -15,48 +18,46 @@ static dev_t my_device_nr;
 static struct class *my_class;
 static struct cdev my_device;
 
-static int set_servo_angle;
-static struct hrtimer servo_timer;
-static ktime_t ktime_period;
+static struct hrtimer ;
+//static ktime_t ktime_period;
 
-#define DRIVER_NAME "my_segment"
-#define DRIVER_CLASS "MyModuleClass_seg"
+#define DRIVER_NAME "my_servo"
+#define DRIVER_CLASS "MyModuleClass_servo"
 
-#define Servo_GPIO 2
+struct pwm_device *pwm0 = NULL;
+u32 pwm_on_time = 10000000;
 
 /**
  * @brief Write data to buffer
  */
-static ssize_t driver_write(struct file *File, const char *user_buffer, size_t count, loff_t *offs) {
+static ssize_t driver_write(struct file *File, const char* user_buffer, size_t count, loff_t *offs) {
 	int to_copy, not_copied, delta;
-	char buffer[10];
+	int buffer = user_buffer;
+	int pulse_width_us;
 
+	int angle;
 	/* Get amount of data to copy */
 	to_copy = min(count, sizeof(buffer));	//copy user input to com
 
 	/* Copy data to user */
 	not_copied = copy_from_user(buffer, user_buffer, to_copy);	//if, it's not 0, some of input not copied
 
-	/* Setting the segments LED */
-	/*
-	if(value & (1 << 0)){
-		gpio_set_value(2, 1);	//gpio pin ON
-	}
-	else{
-		gpio_set_value(2, 0);	//gpio pin OFF 
-	}
-	*/
+
 	
 	sscanf(buffer, "%d", &angle);	//char to int
 
     //Set servo angle
-	//int pulse_width_us = (angle * 1000 / 180) + 1000; // 1ms to 2ms
-	int pulse_width_us = (angle * 1000 / 180);	// 180degree -> 1ms
+	//in servo, 1ms is 0', 2ms is 180'
+	//Cant use float -> angle is 0 to 1000
+	
+	pulse_width_us = angle + 1000;	// 180degree -> 1ms
 
-	if(pulse_width_us>1000 || pulse_width_us < 0){
+	if(pulse_width_us>2000 || pulse_width_us < 0){
 		printk("Invalid Value\n");
+	}else if(pulse_width_us >0) {
+		pwm_config(pwm0, 1000 * pulse_width_us, 20000000);
 	}else{
-		pwm_config(pwm0, 10000 * pulse_width_us, 1000000000);
+		printk("Out of Range");
 	}
 
     //ktime_period = ktime_set(0, pulse_width_us * 1000); // convert us to ns
@@ -155,49 +156,15 @@ ClassError:
  * @brief This function is called, when the module is removed from the kernel
  */
 static void __exit ModuleExit(void) {
-	//just for using gpio
-	gpio_set_value(Servo_GPIO, 0);
-	/*
-	gpio_set_value(3, 0);
-	gpio_set_value(4, 0);
-	gpio_set_value(17, 0);
-	gpio_set_value(21, 0);
-	gpio_set_value(20, 0);
-	gpio_set_value(16, 0);
-	gpio_set_value(12, 0);
-	gpio_set_value(7, 0);
-	gpio_set_value(8, 0);
-	gpio_set_value(25, 0);
-	gpio_set_value(24, 0);
-	*/
-	gpio_free(Servo_GPIO);
-	/*
-	gpio_free(3);
-	gpio_free(4);
-	gpio_free(17);
-	gpio_free(21);
-	gpio_free(20);
-	gpio_free(16);
-	gpio_free(12);
-	gpio_free(7);
-	gpio_free(8);
-	gpio_free(25);
-	gpio_free(24);
-	*/
+	pwm_disable(pwm0);
+	pwm_free(pwm0);
 	cdev_del(&my_device);
 	device_destroy(my_class, my_device_nr);
 	class_destroy(my_class);
 	unregister_chrdev_region(my_device_nr, 1);
 	printk("Goodbye, Kernel\n");
+
 }
 
 module_init(ModuleInit);
 module_exit(ModuleExit);
-
-static int set_servo_angle(int angle) {
-    // Convert angle to appropriate PWM signal here
-    // Example conversion (may need adjustment for your servo):
-    // 0 degrees = 1ms pulse, 180 degrees = 2ms pulse
-    // Pulse period for servo is typically 20ms
-    
-}
