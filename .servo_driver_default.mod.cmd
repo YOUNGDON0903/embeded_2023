@@ -1,1 +1,0 @@
-cmd_/home/kim/git/embeded_week09/servo_driver_default.mod := printf '%s\n'   servo_driver_default.o | awk '!x[$$0]++ { print("/home/kim/git/embeded_week09/"$$0) }' > /home/kim/git/embeded_week09/servo_driver_default.mod

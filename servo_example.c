@@ -23,7 +23,7 @@ int main(int argc, char **argv) {	// argc:count of input ,  argv:input
 		return -1;
 	}
 	printf("Opening was successfull!\n");
-	
+
 	buff = (unsigned short)strtol(&argv[1][0], NULL, 10);
 
 
