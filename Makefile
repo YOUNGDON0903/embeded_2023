@@ -1,4 +1,4 @@
-obj-m += servo_driver.o
+obj-m += servo_driver_default.o
 KDIR = ~/working/kernel
 
 #obj-m += led_button_driver.o

@@ -1,1 +1,0 @@
-cmd_/home/youngdon/working/embeded_week09/led_button_example/modules.order := {   echo /home/youngdon/working/embeded_week09/led_button_example/gpio_driver.ko; :; } | awk '!x[$$0]++' - > /home/youngdon/working/embeded_week09/led_button_example/modules.order
