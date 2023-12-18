@@ -1,0 +1,1 @@
+cmd_/home/kim/git/embeded_week09/Module.symvers := sed 's/ko$$/o/' /home/kim/git/embeded_week09/modules.order | scripts/mod/modpost -m -a  -o /home/kim/git/embeded_week09/Module.symvers -e -i Module.symvers   -T -

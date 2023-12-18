@@ -1,0 +1,1 @@
+cmd_/home/kim/git/embeded_week09/servo_driver_default.ko := arm-linux-gnueabihf-ld -r  -EL -z noexecstack   --build-id=sha1  -T scripts/module.lds -o /home/kim/git/embeded_week09/servo_driver_default.ko /home/kim/git/embeded_week09/servo_driver_default.o /home/kim/git/embeded_week09/servo_driver_default.mod.o;  true
