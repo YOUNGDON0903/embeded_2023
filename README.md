@@ -24,4 +24,7 @@ Raspberry Pi에 연결된 두 센서는 직접 작성한 device driver를 통해
 김재훈: AI 개발, 데이터 셋 구축, 프레임 제작, main 프로그램 작성
 
 
-![alt text](image-2.png)
+
+
+## AI 인식 이미지
+![image](https://github.com/user-attachments/assets/ed203277-1df4-453e-9755-dd8626caf41a)
